@@ -45,8 +45,14 @@ public class Security {
                             "/api/authenticate",
                                     "/api/logout",
                                     "/api/register",
-                                    "/api/activate"
+                                    "/api/activate",
+                                    "/management/health",
+                                    "/management/info",
+                                    "/api/account/reset-password/finish",
+                                    "/api/account/reset-password/init"
                             ).permitAll()
+                            .requestMatchers("/api/**").authenticated()
+                            .anyRequest().authenticated()
                 ).build();
     }
 

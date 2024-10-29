@@ -64,11 +64,15 @@ public class JwtTokenProvider {
     }
 
     public String getUsername(String token) {
-        return Jwts.parser()
+        var name = Jwts.parser()
                 .verifyWith((SecretKey) key)
                 .build()
                 .parseSignedClaims(token)
                 .getPayload()
                 .getSubject();
+        if (name.contains("_")) {
+           name = name.split("_")[1];
+        }
+        return name;
     }
 }

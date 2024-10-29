@@ -9,6 +9,22 @@ spring:
       auto-commit: false
   jpa:
     show-sql: true
+  cloud:
+    gateway:
+      mvc:
+        routes:
+          - id: sfissservice
+            uri: http://localhost:8081
+            predicates:
+              - Path=/sfissservice/**
+
+eureka:
+  client:
+    enabled: false
+    service-url:
+      defaultZone: http://admin:admin@localhost:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true
 
 server:
   port: 8080

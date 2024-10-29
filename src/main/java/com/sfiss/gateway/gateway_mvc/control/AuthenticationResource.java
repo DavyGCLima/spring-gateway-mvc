@@ -18,6 +18,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,6 +36,29 @@ public class AuthenticationResource {
     private final AuthService authService;
 
     private final TokenDetailsService tokenDetailsService;
+
+    @GetMapping("/logout")
+    public ResponseEntity<Void> logout(HttpServletResponse response) {
+        criarCookies(response);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    private void criarCookies(HttpServletResponse response) {
+        Cookie cookie = new Cookie("jwt-token", null);
+        cookie.setPath("/");
+        cookie.setHttpOnly(true);
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
+        cookie = new Cookie("JSESSIONID", null);
+        cookie.setPath("/");
+        cookie.setHttpOnly(true);
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
+        cookie = new Cookie("XSRF-TOKEN", null);
+        cookie.setPath("/");
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
+    }
 
     @PostMapping("/authenticate")
     public ResponseEntity<TokenDetailsDTO> authorize(HttpServletResponse response, @Valid @RequestBody Login login) {
